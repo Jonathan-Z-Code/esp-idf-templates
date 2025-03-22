@@ -8,7 +8,6 @@
 #include "esp_log.h"
 #include "timers.h"
 
-
 // atomic boolean ISR flag for timer0 overflow 
 atomic_bool _overflow_event = false;
 
@@ -38,7 +37,7 @@ const gptimer_config_t timer_config = {
     .clk_src = TIMER_SRC_CLK_APB,
     .direction = GPTIMER_COUNT_UP,
     .resolution_hz = 2000,
-    .intr_priority = 2,
+    .intr_priority = 2, // lvl 2 interrupt config
 };
 const gptimer_alarm_config_t alarm_config = {
     .alarm_count = 2000,

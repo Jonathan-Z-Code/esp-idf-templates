@@ -8,6 +8,7 @@
 #include "wdt.h"
 #include "tasks.h"
 #include "timers.h"
+#include "custom_gpio.h"
 // end of peripheral implementations
 
 
@@ -21,6 +22,7 @@ void app_main() {
     uart_init_0();
     wdt_disable();
     timer_init_0();
+    gpio_enable_dbg_led();
 
     /* create test task via freeRTOS API! */
     xTaskCreate(my_task, "test", 4000, NULL, 1, NULL);
@@ -32,10 +34,6 @@ void app_main() {
             ESP_LOGI(TAG, "overflow event discovered");
             timer_clear_overflow_flag();
         }
-        else {
-            // do something else
-        }
-        // if(other_interrupt_happens) { do something };
     }
 }
 
