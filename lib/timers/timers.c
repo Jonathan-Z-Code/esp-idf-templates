@@ -4,9 +4,9 @@
     #include "driver/gptimer.h"
 #endif /* defined(LEGACY_TIMER_VERSION) */
 
-#include "esp_log.h"
-#include "driver/gpio.h"
 #include <stdatomic.h>
+#include "esp_log.h"
+#include "timers.h"
 
 // atomic boolean ISR flag for timer0 overflow 
 atomic_bool _overflow_event = false;
