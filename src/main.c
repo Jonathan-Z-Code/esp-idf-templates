@@ -18,7 +18,7 @@
 // main entry point
 void app_main() {
 
-    char* TAG = "timer";
+    char* TAG = "timerISR";
     uart_init_0();
     wdt_disable();
     timer_init_0();
@@ -32,6 +32,7 @@ void app_main() {
     while(1) {
         if(timer_overflow_event()) {
             ESP_LOGI(TAG, "overflow event discovered");
+            gpio_toggle_dbg_led();
             timer_clear_overflow_flag();
         }
     }

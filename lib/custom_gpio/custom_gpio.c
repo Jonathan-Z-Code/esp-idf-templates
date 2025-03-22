@@ -6,6 +6,7 @@
 
 static const gpio_num_t blue_led_gpio = GPIO_NUM_2;
 static const uint64_t blue_led_msk = (1ULL << 2);
+static bool _toggle = false;
 //static const uint32_t HIGH = 1;
 // static const int LOW = 0;
 
@@ -19,5 +20,10 @@ const gpio_config_t blue_led_config = {
 
 void gpio_enable_dbg_led(void) {
     ESP_ERROR_CHECK(gpio_config(&blue_led_config));
-    ESP_ERROR_CHECK(gpio_set_level(blue_led_gpio, 1));
+    ESP_ERROR_CHECK(gpio_set_level(blue_led_gpio, 0));
+}
+
+void gpio_toggle_dbg_led(void) {
+    ESP_ERROR_CHECK(gpio_set_level(blue_led_gpio, _toggle));
+    _toggle = !_toggle;
 }
