@@ -11,10 +11,10 @@
 #include "custom_gpio.h"
 // end of peripheral implementations
 
+#define DEBUG_INTERRUPT_DUMP (1)
 
-// app_main theoretically is a freeRTOS task
+// app_main theoretically is a freeRTOS task? I think?
 // dont call vStartScheduler(); , you'll get a panic reset
-
 // main entry point
 void app_main() {
 
@@ -29,6 +29,12 @@ void app_main() {
 
     // don't exit app_main, might mess with freeRTOS scheduler?
     // rn this is a interrupt_driven main loop
+
+    // this interrupt dump does not include callback functions you provided
+    #if DEBUG_INTERRUPT_DUMP
+        esp_intr_dump(NULL); // get interrupt data from all cores
+    #endif
+
     while(1) {
         if(timer_overflow_event()) {
             ESP_LOGI(TAG, "overflow event discovered");
@@ -37,4 +43,3 @@ void app_main() {
         }
     }
 }
-
