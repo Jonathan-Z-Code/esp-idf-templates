@@ -15,6 +15,6 @@ static const uart_config_t uart_config = {
 };
 
 void uart_init_0(void) {
-    ESP_ERROR_CHECK(uart_param_config(UART_NUM_0, &uart_config));
     ESP_ERROR_CHECK(uart_driver_install(UART_NUM_0, UART_BUF_SIZE, UART_BUF_SIZE, UART_QUEUE_SIZE, NULL, 0));
+    ESP_ERROR_CHECK(uart_param_config(UART_NUM_0, &uart_config));
 }

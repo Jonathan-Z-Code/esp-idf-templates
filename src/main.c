@@ -9,6 +9,7 @@
 #include "tasks.h"
 #include "timers.h"
 #include "custom_gpio.h"
+#include "i2c.h"
 // end of peripheral implementations
 
 #define DEBUG_INTERRUPT_DUMP (1)
@@ -23,6 +24,7 @@ void app_main() {
     wdt_disable();
     timer_init_0();
     gpio_enable_dbg_led();
+    i2c_setup_master();
 
     /* create test task via freeRTOS API! */
     xTaskCreate(my_task, "test", 4000, NULL, 1, NULL);
@@ -40,6 +42,7 @@ void app_main() {
             ESP_LOGI(TAG, "overflow event discovered");
             gpio_toggle_dbg_led();
             timer_clear_overflow_flag();
+            i2c_send_data();
         }
     }
 }
