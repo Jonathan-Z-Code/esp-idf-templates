@@ -4,8 +4,8 @@
 
 void my_task(void *pvParameter) {
     while(1) {
-        static const char* TAG = "testing";
-        ESP_LOGI(TAG, "MSG");
-        vTaskDelay(pdMS_TO_TICKS(1000));   
+        static const char* TAG = "my_task";
+        ESP_LOGI(TAG, "rtos task test!");
+        vTaskDelay(pdMS_TO_TICKS(3000));   
     }
 }

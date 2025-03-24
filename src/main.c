@@ -19,7 +19,8 @@
 // main entry point
 void app_main() {
 
-    char* TAG = "timerISR";
+    const char* TIM0_TAG = "timerISR";
+    const char* I2C_TAG = "I2C_PORT0";
     uart_init_0();
     wdt_disable();
     timer_init_0();
@@ -32,17 +33,21 @@ void app_main() {
     // don't exit app_main, might mess with freeRTOS scheduler?
     // rn this is a interrupt_driven main loop
 
-    // this interrupt dump does not include callback functions you provided
+    // this interrupt dump does not include callback function names you provided
     #if DEBUG_INTERRUPT_DUMP
         esp_intr_dump(NULL); // get interrupt data from all cores
     #endif
 
     while(1) {
         if(timer_overflow_event()) {
-            ESP_LOGI(TAG, "overflow event discovered");
+            ESP_LOGI(TIM0_TAG, "overflow event discovered");
             gpio_toggle_dbg_led();
             timer_clear_overflow_flag();
             i2c_send_data();
+        }
+        if(i2c_is_trans_done()) {
+            ESP_LOGI(I2C_TAG, "i2c transaction done!");
+            i2c_clear_trans_flag();
         }
     }
 }
