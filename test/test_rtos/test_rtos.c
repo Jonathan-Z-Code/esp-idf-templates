@@ -11,6 +11,9 @@
 #define RX_BIT (1 << 6)
 #define TX_BIT (1 << 5)
 
+// have a delay for the task_generate_event
+#define RTOS_INIT_DELAY (1000)
+
 TaskHandle_t generate_event_handle;
 TaskHandle_t process_event_handle;
 
@@ -21,9 +24,9 @@ TaskHandle_t process_event_handle;
 void task_generate_event(void* pvParameters) {
     const char* TAG = "generator_event";
     
-    // hard code a delay so the other tasks get a chance to be created before
-    // sending task notifications
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    /* hard code a delay so the other tasks get a chance to be created before
+    sending task notifications */
+    vTaskDelay(pdMS_TO_TICKS(RTOS_INIT_DELAY));
     while(1) {
         xTaskNotify(process_event_handle, RX_BIT, eSetBits);
         ESP_LOGI(TAG, "Task is notified!");
@@ -34,8 +37,8 @@ void task_generate_event(void* pvParameters) {
 // This task processes notifications
 void task_process_event(void* pvParameters) {
     const char* TAG = "process_event";
-    static unsigned long notify_value;
-    
+    static uint32_t notify_value;
+
     while(1) {
         
         BaseType_t result = xTaskNotifyWait(pdTRUE,RX_BIT,&notify_value, portMAX_DELAY);
@@ -68,6 +71,10 @@ void app_main() {
     if(result != pdPASS) ESP_LOGW(TAG, "processTask not init");
 
     // do something
-    while(1) {}
-
+    while(1) {
+        UBaseType_t generator_stack = uxTaskGetStackHighWaterMark(generate_event_handle);
+        UBaseType_t process_stack   = uxTaskGetStackHighWaterMark(process_event_handle);
+        ESP_LOGI(TAG, "gen_task: %d left ; proc_task: %d left", generator_stack, process_stack);
+        vTaskDelay(pdMS_TO_TICKS(5000));
+    }
 }
